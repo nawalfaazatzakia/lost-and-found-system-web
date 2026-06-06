@@ -8,7 +8,7 @@
 
 **Jumlah Anggota:** `3` orang
 
-**Repositori:** `https://github.com/...`
+**Repositori:** `https://github.com/nawalfaazatzakia/lost-and-found-system-web`
 
 ---
 
