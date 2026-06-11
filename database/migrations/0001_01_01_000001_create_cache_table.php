@@ -10,20 +10,21 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
-        Schema::create('cache', function (Blueprint $table) {
-            $table->string('key')->primary();
-            $table->mediumText('value');
-            $table->bigInteger('expiration')->index();
-        });
+{
+    Schema::create('chats', function (Blueprint $table) {
+        $table->id();
 
-        Schema::create('cache_locks', function (Blueprint $table) {
-            $table->string('key')->primary();
-            $table->string('owner');
-            $table->bigInteger('expiration')->index();
-        });
-    }
+        $table->foreignId('claim_id')->constrained()->onDelete('cascade');
 
+        $table->foreignId('sender_id')
+              ->constrained('users')
+              ->onDelete('cascade');
+
+        $table->text('message');
+
+        $table->timestamps();
+    });
+}
     /**
      * Reverse the migrations.
      */
