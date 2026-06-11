@@ -2,18 +2,19 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('home');
-})->name('home');
+Route::get('/', [ReportController::class,'index']);
 
-Route::get('/verification', function () {
-    return view('verification');
-})->name('verification');
+Route::get('/verification',[ClaimController::class,'index']);
 
-Route::get('/admin', function () {
-    return view('admin');
-})->name('admin');
+Route::post('/claim/{id}',[ClaimController::class,'store']);
 
 Route::get('/pickup', function () {
     return view('pickup');
 })->name('pickup');
+
+Route::get('/admin',[AdminController::class,'index']);
+
+Route::get('/pickup/{id}',[PickupController::class,'show']);
+
+Route::post('/chat/send',[ChatController::class,'send']);
+
