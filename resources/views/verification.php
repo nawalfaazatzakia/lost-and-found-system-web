@@ -122,15 +122,15 @@
 </head>
 <body>
 <nav>
-  <a class="logo" href="index.html">
+  <a class="logo" href="{{ url('/') }}">
     <div class="logo-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
     <div><div class="logo-text">Lost &amp; Found</div><div class="logo-sub">Universitas Portal</div></div>
   </a>
   <div class="nav-links">
-    <a href="index.html">Beranda</a>
-    <a href="verification.html" class="active">Verifikasi</a>
-    <a href="admin.html">Admin</a>
-  </div>
+    <a href="{{ url('/') }}">Beranda</a>
+    <a href="{{ url('/verification') }}" class="active">Verifikasi</a>
+    <a href="{{ url('/admin') }}">Admin</a>
+</div>
 </nav>
 
 <div class="main">
