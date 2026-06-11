@@ -130,7 +130,8 @@
     <a href="{{ url('/') }}">Beranda</a>
     <a href="{{ url('/verification') }}" class="active">Verifikasi</a>
     <a href="{{ url('/admin') }}">Admin</a>
-</div>
+    <a href="{{ url('/pickup') }}">Lokasi</a>
+  </div>
 </nav>
 
 <div class="main">

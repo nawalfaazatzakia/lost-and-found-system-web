@@ -15,5 +15,5 @@ Route::get('/admin', function () {
 })->name('admin');
 
 Route::get('/pickup', function () {
-    return view('picup');
+    return view('pickup');
 })->name('pickup');
