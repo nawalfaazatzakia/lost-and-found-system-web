@@ -13,3 +13,7 @@ Route::get('/verification', function () {
 Route::get('/admin', function () {
     return view('admin');
 })->name('admin');
+
+Route::get('/pickup', function () {
+    return view('picup');
+})->name('pickup');
