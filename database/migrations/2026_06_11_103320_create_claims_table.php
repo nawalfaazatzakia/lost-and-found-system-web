@@ -9,27 +9,19 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+   public function up(): void
 {
-    Schema::create('reports', function (Blueprint $table) {
+    Schema::create('claims', function (Blueprint $table) {
         $table->id();
 
+        $table->foreignId('report_id')->constrained()->onDelete('cascade');
         $table->foreignId('user_id')->constrained()->onDelete('cascade');
 
-        $table->string('item_name');
-        $table->enum('type', ['lost', 'found']);
-        $table->string('category');
-        $table->text('description');
-        $table->string('location');
-        $table->date('date');
-
-        $table->string('image')->nullable();
-
+        $table->text('proof');
         $table->enum('status', [
             'pending',
             'approved',
-            'claimed',
-            'completed'
+            'rejected'
         ])->default('pending');
 
         $table->timestamps();
