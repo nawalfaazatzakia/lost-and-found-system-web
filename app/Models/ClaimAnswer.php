@@ -5,16 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Chat extends Model
+class ClaimAnswer extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'claim_id',
-        'sender_id',
-        'receiver_id',
-        'message',
-        'is_read'
+        'verification_question_id',
+        'answer',
+        'is_match'
+    ];
+
+    protected $casts = [
+        'is_match' => 'boolean',
     ];
 
     public function claim()
@@ -22,13 +25,8 @@ class Chat extends Model
         return $this->belongsTo(Claim::class);
     }
 
-    public function sender()
+    public function question()
     {
-        return $this->belongsTo(User::class, 'sender_id');
-    }
-
-    public function receiver()
-    {
-        return $this->belongsTo(User::class, 'receiver_id');
+        return $this->belongsTo(VerificationQuestion::class, 'verification_question_id');
     }
 }

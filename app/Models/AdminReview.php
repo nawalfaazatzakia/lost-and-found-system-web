@@ -5,16 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Chat extends Model
+class AdminReview extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'claim_id',
-        'sender_id',
-        'receiver_id',
-        'message',
-        'is_read'
+        'admin_id',
+        'decision',
+        'notes'
     ];
 
     public function claim()
@@ -22,13 +21,8 @@ class Chat extends Model
         return $this->belongsTo(Claim::class);
     }
 
-    public function sender()
+    public function admin()
     {
-        return $this->belongsTo(User::class, 'sender_id');
-    }
-
-    public function receiver()
-    {
-        return $this->belongsTo(User::class, 'receiver_id');
+        return $this->belongsTo(User::class, 'admin_id');
     }
 }
