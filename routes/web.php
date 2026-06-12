@@ -8,10 +8,10 @@ use App\Http\Controllers\PickupController;
 use App\Http\Controllers\ChatController;
 
 Route::get('/', [ReportController::class,'index'])->name('home');
-Route::get('/verification', [ClaimController::class,'index'])->name('verification');
+Route::get ('/verification', [ClaimController::class,'index'])->name('verification');
 
 Route::get('/pickup', function () {
-    return view('pickup');
+    return view ('pickup');
 })->name('pickup');
 
 Route::get('/admin', [AdminController::class,'index'])->name('admin');
