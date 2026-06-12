@@ -31,7 +31,6 @@ return new class extends Migration
 
             // status pesan (opsional)
             $table->boolean('is_read')->default(false);
-
             $table->timestamps();
         });
     }

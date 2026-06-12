@@ -9,24 +9,17 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-   public function up(): void
-{
-    Schema::create('claims', function (Blueprint $table) {
-        $table->id();
-
-        $table->foreignId('report_id')->constrained()->onDelete('cascade');
-        $table->foreignId('user_id')->constrained()->onDelete('cascade');
-
-        $table->text('proof');
-        $table->enum('status', [
-            'pending',
-            'approved',
-            'rejected'
-        ])->default('pending');
-
-        $table->timestamps();
-    });
-}
+    public function up(): void
+    {
+        Schema::create('claims', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('report_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->text('proof');
+            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->timestamps();
+        });
+    }
 
     /**
      * Reverse the migrations.
