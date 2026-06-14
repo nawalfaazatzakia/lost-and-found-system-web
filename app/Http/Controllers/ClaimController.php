@@ -8,44 +8,60 @@ use Illuminate\Http\Request;
 
 class ClaimController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $claims = Claim::latest()->get();
 
-        return view ('verification', compact('claims'));
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json(['data' => $claims]);
+        }
+
+        return view('verification', compact('claims'));
     }
 
     public function store(Request $request)
     {
-        Claim::create([
-            'report_id' => $request->report_id,
+        $data = $request->validate([
+            'report_id' => 'required|integer|exists:reports,id',
+            'proof' => 'nullable|string',
+        ]);
+
+        $claim = Claim::create([
+            'report_id' => $data['report_id'],
             'user_id'   => auth()->id(),
-            'proof'     => $request->proof,
+            'proof'     => $data['proof'] ?? null,
             'status'    => 'pending',
         ]);
 
-        return redirect()->back()
-            ->with('success', 'Klaim berhasil dikirim');
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json(['data' => $claim], 201);
+        }
+
+        return redirect()->back()->with('success', 'Klaim berhasil dikirim');
     }
 
-    public function approve($id)
+    public function approve(Request $request, $id)
     {
         $claim = Claim::findOrFail($id);
 
-        $claim->update([
-            'status' => 'approved'
-        ]);
+        $claim->update(['status' => 'approved']);
+
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json(['data' => $claim]);
+        }
 
         return redirect()->back();
     }
 
-    public function reject($id)
+    public function reject(Request $request, $id)
     {
         $claim = Claim::findOrFail($id);
 
-        $claim->update([
-            'status' => 'rejected'
-        ]);
+        $claim->update(['status' => 'rejected']);
+
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json(['data' => $claim]);
+        }
 
         return redirect()->back();
     }
