@@ -12,7 +12,7 @@ class ClaimController extends Controller
     {
         $claims = Claim::latest()->get();
 
-        return view('verification', compact('claims'));
+        return view ('verification', compact('claims'));
     }
 
     public function store(Request $request)
