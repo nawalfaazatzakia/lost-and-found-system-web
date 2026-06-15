@@ -18,37 +18,51 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()->create([
+        // Create default users if they do not exist
+        User::firstOrCreate([
+            'nim' => '1910050017'
+        ], [
             'name' => 'Budi Santoso',
             'email' => 'budi@example.com',
-            'nim' => '1910050017',
             'prodi' => 'Sistem Informasi',
             'phone' => '081312345678',
             'role' => 'user',
+            'password' => bcrypt('password'),
         ]);
 
-        User::factory()->create([
+        User::firstOrCreate([
+            'nim' => '1910050020'
+        ], [
             'name' => 'Rina Aulia',
             'email' => 'rina@example.com',
-            'nim' => '1910050020',
             'prodi' => 'Sistem Informasi',
             'phone' => '081398765432',
             'role' => 'user',
+            'password' => bcrypt('password'),
         ]);
 
-        User::factory()->create([
+        User::firstOrCreate([
+            'nim' => '0000000000'
+        ], [
             'name' => 'Admin Kampus',
             'email' => 'admin@example.com',
-            'nim' => '0000000000',
             'prodi' => 'Administrator',
             'phone' => '081300000000',
             'role' => 'admin',
+            'password' => bcrypt('password'),
         ]);
 
-        Report::factory()->count(5)->create();
+        // Only create sample reports/claims/chats if none exist yet
+        if (Report::count() === 0) {
+            Report::factory()->count(5)->create();
+        }
 
-        Claim::factory()->count(3)->create();
+        if (Claim::count() === 0) {
+            Claim::factory()->count(3)->create();
+        }
 
-        Chat::factory()->count(6)->create();
+        if (Chat::count() === 0) {
+            Chat::factory()->count(6)->create();
+        }
     }
 }

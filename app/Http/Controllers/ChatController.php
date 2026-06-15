@@ -3,18 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Http\Requests\ChatSendRequest;
 use App\Models\Chat;
 
 class ChatController extends Controller
 {
-    public function send(Request $request)
+    public function send(ChatSendRequest $request)
     {
-        $data = $request->validate([
-            'message' => 'required|string',
-            'sender' => 'required|integer',
-            'receiver' => 'required|integer',
-        ]);
+        $data = $request->validated();
 
         // optional: persist chat if model configured
         if (class_exists(Chat::class)) {

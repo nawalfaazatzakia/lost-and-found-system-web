@@ -7,7 +7,9 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     git \
-    curl
+    curl \
+    nodejs \
+    npm
 
 RUN docker-php-ext-install pdo pdo_mysql
 

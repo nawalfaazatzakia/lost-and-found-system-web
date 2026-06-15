@@ -16,7 +16,7 @@ use App\Http\Controllers\Admin\ClaimReviewController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 })->name('home');
 
 

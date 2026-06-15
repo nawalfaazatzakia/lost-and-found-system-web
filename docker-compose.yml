@@ -10,6 +10,22 @@ services:
     networks:
       - app-network
 
+  artisan:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lostfound-artisan
+    volumes:
+      - ./:/var/www
+    working_dir: /var/www
+    command: php artisan serve --host=0.0.0.0 --port=8000
+    ports:
+      - "8000:8000"
+    networks:
+      - app-network
+    depends_on:
+      - mysql
+
   nginx:
     image: nginx:alpine
     container_name: lostfound-nginx
@@ -17,9 +33,9 @@ services:
       - "8080:80"
     volumes:
       - ./:/var/www:ro
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
-      - app
+      - artisan
     networks:
       - app-network
 

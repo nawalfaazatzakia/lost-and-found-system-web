@@ -21,8 +21,8 @@ class ClaimFactory extends Factory
                 'type' => 'found',
                 'status' => 'approved',
             ]),
-            'claimer_id' => User::factory(),
-            'claim_reason' => fake()->sentence(8),
+            'user_id' => User::factory(),
+            'proof' => fake()->sentence(8),
             'status' => fake()->randomElement(['pending', 'approved', 'rejected']),
         ];
     }

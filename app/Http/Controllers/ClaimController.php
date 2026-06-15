@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Claim;
 use App\Models\Report;
 use Illuminate\Http\Request;
+use App\Http\Requests\ClaimStoreRequest;
 
 class ClaimController extends Controller
 {
@@ -19,12 +20,10 @@ class ClaimController extends Controller
         return view('verification', compact('claims'));
     }
 
-    public function store(Request $request)
+    public function store(ClaimStoreRequest $request)
     {
-        $data = $request->validate([
-            'report_id' => 'required|integer|exists:reports,id',
-            'proof' => 'nullable|string',
-        ]);
+
+        $data = $request->validated();
 
         $claim = Claim::create([
             'report_id' => $data['report_id'],
