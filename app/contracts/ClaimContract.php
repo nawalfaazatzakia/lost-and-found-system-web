@@ -6,9 +6,12 @@ interface ClaimContract
 {
     public function submitClaim(array $data);
 
-    public function verifyClaim($claimId);
+    public function calculateMatchScore(
+        array $claimAnswers,
+        array $originalAnswers
+    );
 
-    public function getClaimStatus($claimId);
+    public function uploadProof(int $claimId, string $filePath);
 
-    public function uploadProof(array $data);
+    public function getClaimById(int $id);
 }
