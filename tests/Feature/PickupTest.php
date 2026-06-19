@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Contracts\PickupContract;
 use App\Services\PickupService;
 
-class PickupServiceTest extends TestCase
+class PickupTest extends TestCase
 {
     use RefreshDatabase;
 
