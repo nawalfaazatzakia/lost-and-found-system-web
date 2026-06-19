@@ -6,7 +6,9 @@ interface ChatContract
 {
     public function sendMessage(array $data);
 
-    public function getConversation($claimId);
+    public function getMessages(int $roomId);
 
-    public function storeChatHistory($claimId);
+    public function createChatRoom(int $ownerId, int $finderId);
+
+    public function markAsRead(int $messageId);
 }
