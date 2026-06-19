@@ -119,7 +119,8 @@
         <div class="form-group"><label>Tanggal hilang</label><input type="date"></div>
         <div class="form-group full"><label>Deskripsi (ciri khusus, warna, dll)</label><textarea placeholder="Jelaskan ciri-ciri barang agar mudah dikenali..."></textarea></div>
         <div class="form-group full"><label>Foto barang (jika ada)</label><div class="upload-zone" onclick="document.getElementById('file-lost').click()"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><div class="upload-text"><span>Klik untuk upload</span> atau seret file ke sini</div><div style="font-size:11px;color:var(--hint);margin-top:4px">PNG, JPG hingga 5MB</div></div><input id="file-lost" type="file" accept="image/*" style="display:none;"></div>
-        <div class="form-group"><label>Nama pelapor</label><input type="text" placeholder="Nama lengkap"></div>
+        <div class="form-group"><label>Nama pelapor</label><input type="text"> placeholder="Nama lengkap"></div>
+
       </div>
       <button class="btn-submit" onclick="submitForm()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Kirim Laporan</button>
     </div>
