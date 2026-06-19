@@ -2,33 +2,92 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\User;
+use App\Models\Claim;
 use App\Models\Report;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Contracts\ClaimContract;
+use App\Services\ClaimService;
 
-class ClaimTest extends TestCase
+class ClaimServiceTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_user_can_create_claim()
+    private ClaimContract $claimService;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // pakai implementation service langsung
+        $this->claimService = new ClaimService();
+    }
+
+    /** @test */
+    public function test_submit_claim_success()
     {
         $user = User::factory()->create();
+
         $report = Report::factory()->create();
 
-        $this->withoutMiddleware();
+        $data = [
+            'user_id' => $user->id,
+            'report_id' => $report->id,
+            'message' => 'Ini barang saya',
+        ];
 
-        $this->actingAs($user)
-            ->post('/mahasiswa/klaim', [
-                'report_id' => $report->id,
-                'proof' => 'Saya membawa foto bukti',
-            ])
-            ->assertRedirect();
+        $this->claimService->submitClaim($data);
 
         $this->assertDatabaseHas('claims', [
-            'report_id' => $report->id,
             'user_id' => $user->id,
+            'report_id' => $report->id,
+            'message' => 'Ini barang saya',
+        ]);
+    }
+
+    /** @test */
+    public function test_verify_claim_success()
+    {
+        $claim = Claim::factory()->create([
             'status' => 'pending',
+        ]);
+
+        $this->claimService->verifyClaim($claim->id);
+
+        $this->assertDatabaseHas('claims', [
+            'id' => $claim->id,
+            'status' => 'verified',
+        ]);
+    }
+
+    /** @test */
+    public function test_get_claim_status_returns_correct_status()
+    {
+        $claim = Claim::factory()->create([
+            'status' => 'verified',
+        ]);
+
+        $status = $this->claimService->getClaimStatus($claim->id);
+
+        $this->assertEquals('verified', $status);
+    }
+
+    /** @test */
+    public function test_upload_proof_success()
+    {
+        $claim = Claim::factory()->create();
+
+        $data = [
+            'claim_id' => $claim->id,
+            'proof' => 'bukti.jpg',
+        ];
+
+        $this->claimService->uploadProof($data);
+
+        $this->assertDatabaseHas('claims', [
+            'id' => $claim->id,
+            'proof' => 'bukti.jpg',
         ]);
     }
 }
