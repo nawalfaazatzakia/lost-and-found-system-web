@@ -1,59 +1,44 @@
+version: "3.8"
+
 services:
+
   app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: lostfound-app
+    container_name: laravel-app
+    restart: unless-stopped
+    working_dir: /var/www
     volumes:
       - ./:/var/www
-    working_dir: /var/www
     networks:
-      - app-network
-
-  artisan:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: lostfound-artisan
-    volumes:
-      - ./:/var/www
-    working_dir: /var/www
-    command: php artisan serve --host=0.0.0.0 --port=8000
-    ports:
-      - "8000:8000"
-    networks:
-      - app-network
-    depends_on:
-      - mysql
+      - laravel
 
   nginx:
-    image: nginx:alpine
-    container_name: lostfound-nginx
+    image: nginx:latest
+    container_name: laravel-nginx
+    restart: unless-stopped
     ports:
-      - "8080:80"
+      - "8000:80"
     volumes:
-      - ./:/var/www:ro
+      - ./:/var/www
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-    depends_on:
-      - artisan
     networks:
-      - app-network
+      - laravel
 
-  mysql:
-    image: mysql:8.0
-    container_name: lostfound-mysql
+  db:
+    image: mysql:8
+    container_name: laravel-db
+    restart: unless-stopped
     environment:
+      MYSQL_DATABASE: laravel
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: lostfound
+      MYSQL_PASSWORD: root
     ports:
       - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
     networks:
-      - app-network
-
-volumes:
-  mysql_data:
+      - laravel
 
 networks:
-  app-network:
+  laravel:
+    driver: bridge
