@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use App\Contracts\ReportContract;
+use App\Contract\ReportContract;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class ReportContractTest extends TestCase

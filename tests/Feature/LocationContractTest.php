@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use App\Contracts\LocationContract;
+use App\Contract\LocationContract;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class LocationContractTest extends TestCase

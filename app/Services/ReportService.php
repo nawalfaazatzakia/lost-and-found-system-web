@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Contracts\ReportContract;
+use App\Contract\ReportContract;
 
 class ReportService implements ReportContract
 {

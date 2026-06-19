@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Contracts\Communication\ChatContract;
+use App\Contract\Communication\ChatContract;
 
 class ChatService implements ChatContract
 {

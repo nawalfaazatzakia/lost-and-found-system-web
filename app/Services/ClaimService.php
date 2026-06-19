@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Contracts\ClaimContract;
+use App\Contract\ClaimContract;
 
 class ClaimService implements ClaimContract
 {
