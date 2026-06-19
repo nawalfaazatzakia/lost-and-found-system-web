@@ -1,0 +1,58 @@
+name: Laravel Tests (Lost & Found System)
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  laravel-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout code
+      - uses: actions/checkout@v4
+
+      # 2. Setup PHP
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          extensions: mbstring, pdo, sqlite, bcmath
+          coverage: none
+
+      # 3. Copy .env
+      - name: Copy .env
+        run: cp .env.example .env
+
+      # 4. Install dependencies
+      - name: Install Dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      # 5. Generate key
+      - name: Generate Application Key
+        run: php artisan key:generate
+
+      # 6. Permissions
+      - name: Directory Permissions
+        run: chmod -R 777 storage bootstrap/cache
+
+      # 7. Create SQLite database
+      - name: Create Database
+        run: |
+          mkdir -p database
+          touch database/database.sqlite
+
+      # 8. Run migrations
+      - name: Run Migrations
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: database/database.sqlite
+        run: php artisan migrate --force
+
+      # 9. Run Feature & Contract Tests
+      - name: Run Tests (Report, Claim, Chat, Pickup, Admin)
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: database/database.sqlite
+        run: php artisan test
