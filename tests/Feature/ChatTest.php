@@ -10,7 +10,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Contracts\ChatContract;
 use App\Services\ChatService;
 
-class ChatServiceTest extends TestCase
+class ChatTest extends TestCase
 {
     use RefreshDatabase;
 

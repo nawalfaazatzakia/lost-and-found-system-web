@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Contracts\ReportContract;
 use App\Services\ReportService;
 
-class ReportServiceTest extends TestCase
+class ReportTest extends TestCase
 {
     use RefreshDatabase;
 

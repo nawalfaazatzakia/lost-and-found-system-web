@@ -10,7 +10,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Contracts\AdminContract;
 use App\Services\AdminService;
 
-class AdminServiceTest extends TestCase
+class AdminTest extends TestCase
 {
     use RefreshDatabase;
 

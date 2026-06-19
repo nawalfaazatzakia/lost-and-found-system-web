@@ -10,7 +10,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Contracts\ClaimContract;
 use App\Services\ClaimService;
 
-class ClaimServiceTest extends TestCase
+class ClaimTest extends TestCase
 {
     use RefreshDatabase;
 
