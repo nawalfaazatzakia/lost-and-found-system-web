@@ -2,30 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Contract\ChatContract;
 use App\Http\Requests\ChatSendRequest;
-use App\Models\Chat;
 
 class ChatController extends Controller
 {
+    protected $chatService;
+
+    public function __construct(ChatContract $chatService)
+    {
+        $this->chatService = $chatService;
+    }
+
     public function send(ChatSendRequest $request)
     {
-        $data = $request->validated();
-
-        // optional: persist chat if model configured
-        if (class_exists(Chat::class)) {
-            try {
-                $chat = Chat::create($data);
-            } catch (\Throwable $e) {
-                $chat = null;
-            }
-        }
+        $chat = $this->chatService->sendMessage(
+            $request->validated()
+        );
 
         return response()->json([
             'status' => 'ok',
             'message' => 'Pesan berhasil dikirim',
-            'data' => $data,
-            'chat' => $chat ?? null,
+            'data' => $chat,
         ]);
     }
 }
