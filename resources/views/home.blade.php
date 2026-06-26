@@ -88,7 +88,9 @@
     <a href="{{ route('home') }}" class="active">Beranda</a>
     <a href="{{ route('verification') }}">Verifikasi</a>
     <a href="{{ route('admin')}}">Admin</a>
-    <button class="btn-login">Masuk</button>
+    <a href="{{ route('user.login') }}" class="btn-login">
+    Masuk
+</a>
   </div>
 </nav>
 
