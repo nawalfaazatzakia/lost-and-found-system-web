@@ -13,17 +13,18 @@ class ReportService implements ReportContract
         try {
             $report = Report::create([
                 ...$data,
-                'type' => 'lost'
+                'type'   => 'lost',
+                'status' => 'pending',
             ]);
 
             return [
                 'message' => 'Laporan barang hilang berhasil dibuat',
-                'data' => $report
+                'data'    => $report->load('user'),
             ];
         } catch (Exception $e) {
             return [
                 'message' => 'Gagal membuat laporan',
-                'error' => $e->getMessage()
+                'error'   => $e->getMessage(),
             ];
         }
     }
@@ -33,17 +34,18 @@ class ReportService implements ReportContract
         try {
             $report = Report::create([
                 ...$data,
-                'type' => 'found'
+                'type'   => 'found',
+                'status' => 'pending',
             ]);
 
             return [
                 'message' => 'Laporan barang ditemukan berhasil dibuat',
-                'data' => $report
+                'data'    => $report->load('user'),
             ];
         } catch (Exception $e) {
             return [
                 'message' => 'Gagal membuat laporan',
-                'error' => $e->getMessage()
+                'error'   => $e->getMessage(),
             ];
         }
     }
@@ -52,7 +54,7 @@ class ReportService implements ReportContract
     {
         return [
             'message' => 'Daftar semua laporan',
-            'data' => Report::latest()->get()
+            'data'    => Report::with('user')->latest()->get(),
         ];
     }
 
@@ -60,7 +62,7 @@ class ReportService implements ReportContract
     {
         return [
             'message' => 'Detail laporan',
-            'data' => Report::findOrFail($id)
+            'data'    => Report::with(['user', 'claims', 'verificationQuestions'])->findOrFail($id),
         ];
     }
 
@@ -70,7 +72,7 @@ class ReportService implements ReportContract
         $report->delete();
 
         return [
-            'message' => 'Laporan berhasil dihapus'
+            'message' => 'Laporan berhasil dihapus',
         ];
     }
 }

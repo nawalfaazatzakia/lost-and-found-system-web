@@ -10,6 +10,14 @@ class LoginController extends Controller
 {
     public function showUserLogin()
     {
+        if (Auth::check()) {
+            if (Auth::user()->role === 'admin') {
+                return redirect()->route('admin.dashboard');
+            }
+
+            return redirect()->route('user.beranda');
+        }
+
         return view('login');
     }
 
@@ -21,15 +29,18 @@ class LoginController extends Controller
         ]);
 
         if (Auth::attempt($credentials)) {
-
             $request->session()->regenerate();
 
-            return redirect()->route('home');
+            if (Auth::user()->role === 'admin') {
+                return redirect()->route('admin.dashboard');
+            }
+
+            return redirect()->route('user.beranda');
         }
 
         return back()->withErrors([
             'email' => 'Email atau password salah.',
-        ]);
+        ])->withInput();
     }
 
     public function userLogout(Request $request)
@@ -39,6 +50,6 @@ class LoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('home');
+        return redirect()->route('login');
     }
 }

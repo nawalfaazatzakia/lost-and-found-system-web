@@ -14,6 +14,7 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
@@ -23,10 +24,10 @@
                     <a class="nav-link" href="{{ route('verification') }}">Verification</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('admin') }}">Admin</a>
+                    <a class="nav-link" href="{{ route('login') }}">Admin</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('user.login') }}">Login</a>
+                    <a class="nav-link" href="{{ route('login') }}">Login</a>
                 </li>
             </ul>
         </div>

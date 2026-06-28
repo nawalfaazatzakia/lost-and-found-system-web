@@ -16,36 +16,44 @@ class ReportController extends Controller
 
     public function index()
     {
-        $reports = $this->reportService->getAllReports();
+        return response()->json(
+            $this->reportService->getAllReports()
+        );
+    }
 
-        return view('home', compact('reports'));
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'item_name' => 'required|string',
+            'category' => 'required|string',
+            'description' => 'required|string',
+            'location' => 'required|string',
+            'date' => 'required|date',
+            'image' => 'nullable|string',
+            'type' => 'required|in:lost,found'
+        ]);
+
+        if ($validated['type'] === 'lost') {
+            $result = $this->reportService->createLostReport($validated);
+        } else {
+            $result = $this->reportService->createFoundReport($validated);
+        }
+
+        return response()->json($result);
     }
 
     public function show($id)
     {
-        $report = $this->reportService->getReportById($id);
-
-        return view('report-detail', compact('report'));
-    }
-
-    public function storeLost(Request $request)
-    {
-        $this->reportService->createLostReport($request->all());
-
-        return redirect()->back();
-    }
-
-    public function storeFound(Request $request)
-    {
-        $this->reportService->createFoundReport($request->all());
-
-        return redirect()->back();
+        return response()->json(
+            $this->reportService->getReportById($id)
+        );
     }
 
     public function destroy($id)
     {
-        $this->reportService->deleteReport($id);
-
-        return redirect()->back();
+        return response()->json(
+            $this->reportService->deleteReport($id)
+        );
     }
 }

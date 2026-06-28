@@ -12,18 +12,14 @@ class AdminApprovalService implements AdminApprovalContract
 {
     public function getPendingClaims()
     {
-        $claims = Claim::with([
-            'user',
-            'report',
-            'answers'
-        ])
-        ->where('status', 'pending')
-        ->latest()
-        ->get();
+        $claims = Claim::with(['user', 'report', 'answers.question'])
+            ->where('status', 'pending')
+            ->latest()
+            ->get();
 
         return [
             'message' => 'Daftar klaim yang menunggu persetujuan',
-            'data' => $claims
+            'data'    => $claims,
         ];
     }
 
@@ -35,39 +31,34 @@ class AdminApprovalService implements AdminApprovalContract
             $claim = Claim::with('report')->findOrFail($claimId);
 
             if ($claim->status !== 'pending') {
-                throw new Exception('Klaim sudah diproses');
+                throw new Exception('Klaim sudah diproses sebelumnya');
             }
 
-            $claim->update([
-                'status' => 'approved'
-            ]);
+            $claim->update(['status' => 'approved']);
 
-            // update report agar item dianggap sudah ditemukan pemiliknya
             if ($claim->report) {
-                $claim->report->update([
-                    'status' => 'claimed'
-                ]);
+                $claim->report->update(['status' => 'claimed']);
             }
 
             AdminReview::create([
                 'claim_id' => $claim->id,
-                'admin_id' => auth()->id(),
+                'admin_id' => null, // tidak pakai auth, bisa diisi manual jika perlu
                 'decision' => 'approved',
-                'notes' => 'Klaim disetujui admin'
+                'notes'    => 'Klaim disetujui admin',
             ]);
 
             DB::commit();
 
             return [
                 'message' => 'Klaim berhasil disetujui',
-                'data' => $claim
+                'data'    => $claim->load(['user', 'report', 'adminReviews']),
             ];
         } catch (Exception $e) {
             DB::rollBack();
 
             return [
                 'message' => 'Gagal menyetujui klaim',
-                'error' => $e->getMessage()
+                'error'   => $e->getMessage(),
             ];
         }
     }
@@ -80,32 +71,30 @@ class AdminApprovalService implements AdminApprovalContract
             $claim = Claim::findOrFail($claimId);
 
             if ($claim->status !== 'pending') {
-                throw new Exception('Klaim sudah diproses');
+                throw new Exception('Klaim sudah diproses sebelumnya');
             }
 
-            $claim->update([
-                'status' => 'rejected'
-            ]);
+            $claim->update(['status' => 'rejected']);
 
             AdminReview::create([
                 'claim_id' => $claim->id,
-                'admin_id' => auth()->id(),
+                'admin_id' => null,
                 'decision' => 'rejected',
-                'notes' => $reason
+                'notes'    => $reason,
             ]);
 
             DB::commit();
 
             return [
                 'message' => 'Klaim berhasil ditolak',
-                'data' => $claim
+                'data'    => $claim->load(['user', 'report', 'adminReviews']),
             ];
         } catch (Exception $e) {
             DB::rollBack();
 
             return [
                 'message' => 'Gagal menolak klaim',
-                'error' => $e->getMessage()
+                'error'   => $e->getMessage(),
             ];
         }
     }
@@ -116,18 +105,19 @@ class AdminApprovalService implements AdminApprovalContract
             $claim = Claim::with([
                 'user',
                 'report',
-                'answers',
-                'adminReviews'
+                'answers.question',
+                'adminReviews.admin',
+                'handover',
             ])->findOrFail($claimId);
 
             return [
                 'message' => 'Detail klaim',
-                'data' => $claim
+                'data'    => $claim,
             ];
         } catch (Exception $e) {
             return [
                 'message' => 'Klaim tidak ditemukan',
-                'error' => $e->getMessage()
+                'error'   => $e->getMessage(),
             ];
         }
     }

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Contract\ChatContract;
-use App\Http\Requests\ChatSendRequest;
+use Illuminate\Http\Request;
 
 class ChatController extends Controller
 {
@@ -14,16 +14,31 @@ class ChatController extends Controller
         $this->chatService = $chatService;
     }
 
-    public function send(ChatSendRequest $request)
+    public function send(Request $request)
     {
-        $chat = $this->chatService->sendMessage(
-            $request->validated()
-        );
-
-        return response()->json([
-            'status' => 'ok',
-            'message' => 'Pesan berhasil dikirim',
-            'data' => $chat,
+        $validated = $request->validate([
+            'claim_id' => 'required|exists:claims,id',
+            'sender_id' => 'required|exists:users,id',
+            'receiver_id' => 'required|exists:users,id',
+            'message' => 'required|string'
         ]);
+
+        return response()->json(
+            $this->chatService->sendMessage($validated)
+        );
+    }
+
+    public function messages($claimId)
+    {
+        return response()->json(
+            $this->chatService->getMessages($claimId)
+        );
+    }
+
+    public function markRead($id)
+    {
+        return response()->json(
+            $this->chatService->markAsRead($id)
+        );
     }
 }

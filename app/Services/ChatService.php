@@ -10,41 +10,48 @@ class ChatService implements ChatContract
     public function createChatRoom(int $ownerId, int $finderId)
     {
         return [
-            'message' => 'Room chat berhasil dibuat',
-            'owner_id' => $ownerId,
-            'finder_id' => $finderId
+            'message'   => 'Room chat berhasil dibuat',
+            'owner_id'  => $ownerId,
+            'finder_id' => $finderId,
         ];
     }
 
     public function sendMessage(array $data)
     {
-        $chat = Chat::create($data);
+        $chat = Chat::create([
+            'claim_id'    => $data['claim_id'],
+            'sender_id'   => $data['sender_id'],
+            'receiver_id' => $data['receiver_id'] ?? null,
+            'message'     => $data['message'],
+            'is_read'     => false,
+        ]);
 
         return [
             'message' => 'Pesan berhasil dikirim',
-            'data' => $chat
+            'data'    => $chat->load(['sender', 'receiver']),
         ];
     }
 
-    public function getMessages(int $roomId)
+    public function getMessages(int $claimId)
     {
-        $messages = Chat::where('room_id', $roomId)->latest()->get();
+        $messages = Chat::with(['sender', 'receiver'])
+            ->where('claim_id', $claimId)
+            ->oldest()
+            ->get();
 
         return [
             'message' => 'Daftar pesan',
-            'data' => $messages
+            'data'    => $messages,
         ];
     }
 
     public function markAsRead(int $messageId)
     {
         $chat = Chat::findOrFail($messageId);
-        $chat->update([
-            'is_read' => true
-        ]);
+        $chat->update(['is_read' => true]);
 
         return [
-            'message' => 'Pesan telah dibaca'
+            'message' => 'Pesan telah dibaca',
         ];
     }
 }

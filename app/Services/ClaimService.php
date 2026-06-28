@@ -5,30 +5,40 @@ namespace App\Services;
 use App\Contract\ClaimContract;
 use App\Models\Claim;
 use App\Models\ClaimAnswer;
+use App\Models\VerificationQuestion;
 
 class ClaimService implements ClaimContract
 {
     public function submitClaim(array $data)
     {
         $claim = Claim::create([
-            'user_id' => $data['user_id'],
+            'user_id'   => $data['user_id'],
             'report_id' => $data['report_id'],
-            'status' => 'pending'
+            'proof'     => $data['proof'] ?? null,
+            'status'    => 'pending',
         ]);
 
-        if (isset($data['answers'])) {
+        // Simpan jawaban verifikasi jika ada
+        if (isset($data['answers']) && is_array($data['answers'])) {
             foreach ($data['answers'] as $questionId => $answer) {
+                // Cek apakah jawaban cocok dengan expected_answer
+                $question = VerificationQuestion::find($questionId);
+                $isMatch  = $question
+                    ? strtolower(trim($answer)) === strtolower(trim($question->expected_answer))
+                    : false;
+
                 ClaimAnswer::create([
-                    'claim_id' => $claim->id,
-                    'question_id' => $questionId,
-                    'answer' => $answer
+                    'claim_id'                 => $claim->id,
+                    'verification_question_id' => $questionId,
+                    'answer'                   => $answer,
+                    'is_match'                 => $isMatch,
                 ]);
             }
         }
 
         return [
             'message' => 'Klaim berhasil diajukan',
-            'data' => $claim
+            'data'    => $claim->load(['answers', 'report']),
         ];
     }
 
@@ -54,12 +64,12 @@ class ClaimService implements ClaimContract
         $claim = Claim::findOrFail($claimId);
 
         $claim->update([
-            'proof_file' => $filePath
+            'proof' => $filePath,
         ]);
 
         return [
             'message' => 'Bukti berhasil diunggah',
-            'data' => $claim
+            'data'    => $claim,
         ];
     }
 
@@ -67,7 +77,7 @@ class ClaimService implements ClaimContract
     {
         return [
             'message' => 'Detail klaim',
-            'data' => Claim::with(['answers', 'report'])->findOrFail($id)
+            'data'    => Claim::with(['answers.question', 'report', 'user', 'handover', 'adminReviews'])->findOrFail($id),
         ];
     }
 }
